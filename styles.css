@@ -1,0 +1,40 @@
+:root{
+  --bg:#0f1724;
+  --card:#0b1220;
+  --muted:#9aa4b2;
+  --accent:#60a5fa;
+  --text:#e6eef8;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#071028 0%, #071b2a 100%);color:var(--text);margin:0;padding:3rem}
+.container{max-width:900px;margin:0 auto;background:var(--card);padding:2rem;border-radius:10px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+header h1{margin:0 0 .25rem 0;font-size:1.6rem}
+.lead{color:var(--muted);margin-top:0}
+.content ul{color:var(--muted)}
+.demo{margin-top:1.5rem}
+.form-row{display:flex;flex-direction:column;margin-bottom:0.75rem}
+.form-row label{font-size:0.9rem;margin-bottom:0.25rem;color:var(--muted)}
+input,textarea{background:#071725;border:1px solid rgba(255,255,255,0.04);color:var(--text);padding:.6rem;border-radius:6px;font-size:0.95rem}
+.buttons{display:flex;gap:.5rem;margin:0.5rem 0 1rem}
+button{background:var(--accent);border:none;color:#04233f;padding:.55rem .85rem;border-radius:8px;cursor:pointer;font-weight:600}
+button:active{transform:translateY(1px)}
+.note{font-size:0.85rem;color:var(--muted)}
+footer{margin-top:1.5rem;color:var(--muted);font-size:0.85rem}
+@media(max-width:600px){body{padding:1rem}.container{padding:1rem}}
+
+/* Navigation */
+.topnav{margin-top:1rem;display:flex;gap:.5rem}
+.navbtn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:.4rem .6rem;border-radius:6px;cursor:pointer}
+.navbtn.active{background:var(--accent);color:#04233f;border-color:transparent}
+
+/* Game styles */
+.game-controls{display:flex;gap:1rem;align-items:center;margin:.75rem 0}
+.grid{display:grid;grid-template-columns:repeat(8,1fr);gap:.5rem}
+.card{background:#071725;border:1px solid rgba(255,255,255,0.04);padding:.6rem;border-radius:6px;min-height:64px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-align:center}
+.card.revealed{background:#143a5a;color:#fff}
+.card.matched{background:#0b3b2f;color:#bff0d6;cursor:default}
+.card .label{font-size:0.9rem}
+
+@media(max-width:900px){.grid{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+

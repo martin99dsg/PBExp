@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="sk">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Kyberbezpečnosť — Demo šifrovania</title>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+		<main class="container">
+			<header>
+				<h1>Kyberbezpečnosť — Demo šifrovania</h1>
+				<p class="lead">Interaktívna stránka ilustrujúca základné princípy symetrického šifrovania (AES-GCM) a ochrany heslom.</p>
+				<nav class="topnav">
+					<button id="navDemo" class="navbtn active">Demo šifrovania</button>
+					<button id="navGame" class="navbtn">Hra: Pexeso</button>
+				</nav>
+			</header>
+
+			<section class="content">
+				<h2>Krátke vysvetlenie</h2>
+				<ul>
+					<li><strong>Symetrické šifrovanie:</strong> rovnaký kľúč sa používa na šifrovanie aj dešifrovanie (napr. AES).</li>
+					<li><strong>Asymetrické šifrovanie:</strong> používa pár kľúčov (verejný + súkromný), vhodné pre výmenu kľúčov (napr. RSA, ECC).</li>
+					<li><strong>Derivácia kľúča z hesla:</strong> bezpečné premenenie hesla na kľúč pomocou PBKDF2 alebo scrypt.</li>
+				</ul>
+			</section>
+
+			<section id="demoArea" class="demo">
+				<h2>Demo: Šifrovanie textu heslom (AES-GCM)</h2>
+				<div class="form-row">
+					<label for="pass">Heslo / fráza</label>
+					<input id="pass" type="password" placeholder="Zadajte heslo">
+				</div>
+
+				<div class="form-row">
+					<label for="plaintext">Text na zašifrovanie</label>
+					<textarea id="plaintext" rows="4" placeholder="Sem napíšte správu..."></textarea>
+				</div>
+
+				<div class="buttons">
+					<button id="encryptBtn">Zašifrovať</button>
+					<button id="decryptBtn">Dešifrovať</button>
+				</div>
+
+				<div class="form-row">
+					<label for="output">Výsledok (Base64)</label>
+					<textarea id="output" rows="6" readonly placeholder="Výsledok sa zobrazí tu..."></textarea>
+				</div>
+
+				<p class="note">Poznámka: Toto demo používa Web Crypto API v prehliadači. Heslá a údaje nevytvárajte na zdieľaných zariadeniach.</p>
+			</section>
+
+			<section class="explain">
+				<h2>Ako to funguje (krok za krokom)</h2>
+				<ol>
+					<li><strong>Salt</strong> — pri každom šifrovaní vygenerujeme náhodný salt (16 bajtov). Zabezpečuje, že rovnaké heslo dá rôzne výsledky a zabraňuje rainbow table útokom.</li>
+					<li><strong>Derivácia kľúča</strong> — z hesla a soli sa pomocou <code>PBKDF2</code> (100 000 iterácií, SHA-256) odvodený 256-bitový kľúč pre AES. To spomalí offline hádanie hesla.</li>
+					<li><strong>IV (inicializačný vektor)</strong> — pre AES-GCM použijeme náhodné 12-bajtové IV (nonce). IV sa nesmie znova použiť s rovnakým kľúčom.</li>
+					<li><strong>Šifrovanie (AES-GCM)</strong> — samotný text sa zašifruje pomocou AES-GCM. AES-GCM zároveň vygeneruje autentifikačný tag, ktorý overuje integritu a autenticitu dát pri dešifrovaní.</li>
+					<li><strong>Zloženie výstupu</strong> — do jedného binárneho bloku uložíme: <em>salt || iv || ciphertext</em>, a potom celý blok prevedieme do textu cez Base64, aby sa dal bezpečne uložiť alebo skopírovať.</li>
+					<li><strong>Dešifrovanie</strong> — pri importe Base64 dekódujeme, rozdelíme na salt/iv/ciphertext, odvinieme kľúč PBKDF2 so saltom a použijeme AES-GCM s daným IV; ak sa autentifikačný tag nezhoduje, dešifrovanie zlyhá.</li>
+				</ol>
+				<p class="note">Dôležité: Base64 nie je šifrovanie — iba kódovanie. Bezpečnosť poskytuje AES + správne odvodený kľúč. Pre produkčné nasadenie zvážte použitie modernejších KDF (scrypt/Argon2), vyšší počet iterácií a bezpečné ukladanie/overovanie hesiel.</p>
+			</section>
+
+			<section id="gameArea" class="game" style="display:none">
+				<h2>Hra: Pexeso — Pojmy a definície</h2>
+				<p class="note">Nájdite páry: jedna kartička obsahuje pojem, druhá jeho definíciu. 16 párov (32 kariet).</p>
+				<div class="game-controls">
+					<button id="startGame">Spustiť hru</button>
+					<button id="resetGame">Reset</button>
+					<span id="moves">Tahy: 0</span>
+					<span id="matches">Páry: 0 / 16</span>
+				</div>
+				<div id="grid" class="grid"></div>
+				<p class="note">Tip: kliknite na dve kartičky, ak sa zhodujú (pojem ↔ definícia), zostanú odkryté.</p>
+			</section>
+
+			<footer>
+				<p>Vytvorené pre vzdelávacie účely — príklad implementácie v JavaScripte (Web Crypto API).</p>
+			</footer>
+		</main>
+		<script src="script.js"></script>
+	</body>
+</html>
