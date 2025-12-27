@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://martin99dsg.github.io/PBExp/sitemap.xml
